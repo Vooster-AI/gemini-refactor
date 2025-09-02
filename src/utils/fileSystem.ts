@@ -12,7 +12,19 @@ export const readFile = async (filePath: string): Promise<string> => {
 
 export const countChars = (content: string): number => content.length;
 
-export const buildFileTree = async (cwd: string, pattern = '**/*', ignore: string[] = ['**/node_modules/**', '**/dist/**', '**/.git/**']): Promise<string[]> => {
+export const buildFileTree = async (
+  cwd: string,
+  pattern = '**/*',
+  ignore: string[] = [
+    '**/node_modules/**',
+    '**/dist/**',
+    '**/.git/**',
+    '**/package-lock.json',
+    '**/yarn.lock',
+    '**/pnpm-lock.yaml',
+    '**/npm-shrinkwrap.json',
+  ]
+): Promise<string[]> => {
   const results = await glob(pattern, { cwd, ignore, nodir: true, dot: false });
   return results.map((p) => path.normalize(p));
 };
