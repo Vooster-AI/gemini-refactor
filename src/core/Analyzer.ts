@@ -124,18 +124,28 @@ export class Analyzer {
       this.options.outputDir,
       "gemini-refactor-report.xml"
     );
-    await generateReportXml(reportPath, {
-      projectContext: init.projectSummary,
+    
+    const reportData: any = {
       currentTree,
-      proposedTree,
-      proposedRationale,
       averageScore: {
         modularity: mod,
         cleanCode: clean,
         overEngineering: over,
       },
       improvements,
-    });
+    };
+    
+    if (init.projectSummary) {
+      reportData.projectContext = init.projectSummary;
+    }
+    if (proposedTree) {
+      reportData.proposedTree = proposedTree;
+    }
+    if (proposedRationale) {
+      reportData.proposedRationale = proposedRationale;
+    }
+    
+    await generateReportXml(reportPath, reportData);
     logger.info(`리포트를 생성했습니다: ${reportPath}`);
 
     // Phase 4 Plan
