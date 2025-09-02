@@ -1,5 +1,7 @@
 import { logger } from '../utils/logger.js';
 import { NodejsPlugin } from '../plugins/NodejsPlugin.js';
+import { initializeProject } from '../analysis/1_initializeProject.js';
+import { identifyBuildingBlocks } from '../analysis/2_identifyBuildingBlocks.js';
 export class Analyzer {
     options;
     constructor(options) {
@@ -21,6 +23,16 @@ export class Analyzer {
         for (const [name, version] of Object.entries(deps.devDependencies)) {
             logger.info(`- (dev) ${name}@${version}`);
         }
+        // Phase 2 Step 1
+        const init = await initializeProject(this.options.cwd);
+        if (init.projectSummary) {
+            logger.info('프로젝트 컨텍스트 요약:');
+            logger.info(init.projectSummary);
+        }
+        // Phase 2 Step 2
+        const blocks = await identifyBuildingBlocks(this.options.cwd, this.options.ultrathink);
+        logger.info('핵심 파일/디렉토리 식별 결과:');
+        logger.info(blocks.identified || '(LLM 식별 결과 없음)');
     }
 }
 //# sourceMappingURL=Analyzer.js.map
