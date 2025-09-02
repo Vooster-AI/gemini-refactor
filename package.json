@@ -1,0 +1,42 @@
+{
+  "name": "gemini-refactor",
+  "version": "1.0.0",
+  "description": "",
+  "main": "dist/cli/index.js",
+  "scripts": {
+    "test": "jest --passWithNoTests",
+    "build": "tsc",
+    "dev": "ts-node src/cli/index.ts",
+    "tdd": "npm run test -- --watch"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@google/generative-ai": "^0.24.1",
+    "chalk": "^5.6.0",
+    "commander": "^14.0.0",
+    "dotenv": "^17.2.1",
+    "fs-extra": "^11.3.1",
+    "glob": "^11.0.3",
+    "ora": "^8.2.0",
+    "xmlbuilder2": "^3.1.1"
+  },
+  "devDependencies": {
+    "@types/fs-extra": "^11.0.4",
+    "@types/glob": "^9.0.0",
+    "@types/jest": "^30.0.0",
+    "@types/node": "^24.3.0",
+    "jest": "^30.1.3",
+    "ts-jest": "^29.4.1",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.9.2"
+  },
+  "type": "module",
+  "bin": {
+    "gemini-refactor": "bin/gemini-refactor.js"
+  },
+  "engines": {
+    "node": ">=18"
+  }
+}
