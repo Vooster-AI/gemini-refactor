@@ -2,6 +2,10 @@ import { logger } from '../utils/logger.js';
 import { NodejsPlugin } from '../plugins/NodejsPlugin.js';
 import { initializeProject } from '../analysis/1_initializeProject.js';
 import { identifyBuildingBlocks } from '../analysis/2_identifyBuildingBlocks.js';
+import { deepAnalyze } from '../analysis/3_deepAnalyze.js';
+import { generateReportXml } from '../reporting/reportGenerator.js';
+import { generatePlanXml } from '../reporting/planGenerator.js';
+import path from 'path';
 
 export interface AnalyzerOptions {
   ultrathink?: boolean;
@@ -41,6 +45,19 @@ export class Analyzer {
     const blocks = await identifyBuildingBlocks(this.options.cwd, this.options.ultrathink);
     logger.info('핵심 파일/디렉토리 식별 결과:');
     logger.info(blocks.identified || '(LLM 식별 결과 없음)');
+
+    // Phase 3 Step 3
+    const deep = await deepAnalyze(this.options.cwd, blocks.fileTreeSample.slice(0, 10));
+    const insights = deep.map((d) => `${d.path}: ${d.summary}`);
+    const improvedStructure = '미니 추천 구조 (예시): src/, tests/, docs/, dist/';
+    const reportPath = path.join(this.options.cwd, this.options.outputDir, 'gemini-refactor-report.xml');
+    await generateReportXml(reportPath, { improvedStructure, insights });
+    logger.info(`리포트를 생성했습니다: ${reportPath}`);
+
+    // Phase 4 Plan
+    const planPath = path.join(this.options.cwd, this.options.outputDir, 'gemini-refactor-plan.xml');
+    await generatePlanXml(reportPath, planPath, !!this.options.tdd);
+    logger.info(`실행 계획을 생성했습니다: ${planPath}`);
   }
 }
 
