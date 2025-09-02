@@ -4,7 +4,7 @@
   "description": "",
   "main": "dist/cli/index.js",
   "scripts": {
-    "test": "jest --passWithNoTests",
+    "test": "NODE_OPTIONS=--experimental-vm-modules jest --passWithNoTests",
     "build": "tsc",
     "dev": "ts-node src/cli/index.ts",
     "tdd": "npm run test -- --watch"
