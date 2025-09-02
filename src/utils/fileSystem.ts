@@ -46,7 +46,9 @@ const gitignoreToGlobIgnores = (pattern: string): string[] => {
     return [p, `**/${p}`];
   }
 
-  return [p, `**/${p}`];
+  // 슬래시 없는 이름: 파일 또는 디렉터리 이름 모두 대상으로 간주
+  // 디렉터리 전부를 무시하기 위해 재귀 패턴을 추가
+  return [p, `**/${p}`, `${p}/**`, `**/${p}/**`];
 };
 
 export const buildFileTree = async (
